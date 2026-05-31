@@ -1,14 +1,24 @@
 from core.state import STATE
 
-def cart_add(item: str, cost: int):
-    STATE["cart"].append({
-        "name": item,
-        "price": cost
+def task_add(name: str, date: str, time: str):
+    STATE["schedule"].append({
+        "name": name,
+        "date": date,
+        "time": time,
+        "priority": 0.5
     })
-    return f"Added {item} for ${cost}"
+    return f"Added {name} for {time} on {date}"
 
-def cart_total():
-    return sum(entry["price"] for entry in STATE["cart"])
+def add_priority(user: float, name: str):
+    for task in STATE["schedule"]:
+        if name == task["name"]:
+            task["priority"] = user
+            return f"successfully added priority of {user} to event {name}"
+    return "Unable to find specified task"
 
-def cart_list():
-    return STATE["cart"]
+def prioritize():
+    STATE["schedule"].sort(key=lambda task: task.get("priority", 0), reverse=True)
+    return STATE["schedule"]
+
+def show():
+    return STATE["schedule"]
